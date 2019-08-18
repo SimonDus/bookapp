@@ -22,6 +22,15 @@ def det_books():
 
 # POST / books
 
+def validBooksObject(bookObject):
+    if ("name" in bookObject
+            and "price" in bookObject
+                and "isbn" in bookObject):
+        return True
+    else:
+        return False
+
+ 
 @booksapp.route('/books', methods=['POST'])
 def add_book():
     return jsonify(request.get_json())
