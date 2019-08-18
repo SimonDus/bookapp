@@ -12,7 +12,23 @@ books = [
         'price': 6.99,
         'isbn': 35436488787,
 
+    },
+    {
+        'name': 'F',
+        'price': '8.89',
+        'isbn': 35425454536,
+    },
+    {
+        'name': 'G',
+        'price': '8.89',
+        'isbn': 45645161555,
+    },
+    {
+        'name': 'QQQ',
+        'price': '10.89',
+        'isbn': 54925454345,
     }
+
 ]
 
 #Get /books
@@ -33,7 +49,17 @@ def validBooksObject(bookObject):
  
 @booksapp.route('/books', methods=['POST'])
 def add_book():
-    return jsonify(request.get_json())
+    request_data = request.get_json()
+    if(validBooksObject(request_data)):
+        new_book = {
+            "name": request_data['name'],
+            "price": request_data['price'],
+            "isbn" : request_data['isbn']
+        }
+        books.insert(0, new_book)
+        return "True"
+    else:
+        return "False"
 
 
 @booksapp.route('/books/<int:isbn>')
