@@ -1,10 +1,23 @@
-from flask import Flask
+from flask import Flask, jsonify
 
-superbolide = Flask(__name__)
+booksapp = Flask(__name__)
+books = [
+    {
+        'name': 'Green eggs and Ham',
+        'price': 7.99,
+        'isbn': 36545334235,
+    },
+    {
+        'name': 'The cat in the hat',
+        'price': 6.99,
+        'isbn': 35436488787,
 
+    }
+]
 
-@superbolide.route('/')
-def sortByName():
-    return 'not implemented yet'
+#Get /books
+@booksapp.route('/books')
+def det_books():
+    return {'books': books}
     
-superbolide.run(port=5000)
+booksapp.run(port=5000)
