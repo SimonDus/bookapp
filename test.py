@@ -1,5 +1,15 @@
 from flask import Flask, jsonify, request
 
+
+bookObject = {
+    "type" : "object",
+    "properties" : {
+        "name" : {"type" : "string"},
+        "price" : {"type" : "float"},
+        "isbn" : {"type" : "integer"},
+    }
+}
+
 def validBooksObject(bookObject):
     if ("name" in bookObject
             and "price" in bookObject
@@ -28,3 +38,4 @@ missing_isbn = {
     'name': 'La métaphysique des moeurs',
     'price': 12.99
 }
+
