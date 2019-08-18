@@ -28,8 +28,12 @@ books = [
         'name': 'QQQ',
         'price': '10.89',
         'isbn': 54925454345,
+    },
+    {
+        "name": "Le Talmud, traité de Halaka et Guemarra",
+        "price": 489.63,
+        "isbn": 36545312345
     }
-
 ]
 
 #Get /books
@@ -81,5 +85,25 @@ def get_books_by_isbn(isbn):
                 'price': book["price"]
             }
     return jsonify(return_value)
-    
+
+#PUT /books/36545312345
+
+@booksapp.route('/books/<int:isbn>', methods=['PUT'])
+def update_book(isbn):
+    request_data = request.get_json()
+    new_book = {
+        'name': request_data['name'],
+        'price': request_data['price'],
+        'isbn' : isbn
+    }
+    i = 0
+    for book in books:
+        currentIsbn = book["isbn"]
+        if currentIsbn == isbn:
+            books[i] = new_book
+        i += 1
+    response = Response("",status=204)
+    return response
+
+  
 booksapp.run(port=5000)
