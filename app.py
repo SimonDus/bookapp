@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 
 booksapp = Flask(__name__)
 books = [
@@ -57,7 +57,8 @@ def add_book():
             "isbn" : request_data['isbn']
         }
         books.insert(0, new_book)
-        return "True"
+        response = Response("", 201,mimetype='application/json')
+        return response
     else:
         return "False"
 
