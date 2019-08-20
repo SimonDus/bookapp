@@ -170,12 +170,15 @@ def update_book(isbn):
 def delete_book(isbn):
     i = 0
     for book in books:
-        currentIsbn = book["isbn"]
-        if currentIsbn == isbn:
+        if book["isbn"] == isbn:
             books.remove(books[i])
-        i += 1    
-    response = Response("", status=204)
-    response.headers['Location'] = "/books/" + str(isbn)
+            response = Response("", status=204)
+            return response            
+        i += 1
+    invalidBookObjectErrorMsg = {
+        "error" : "No match"
+    }     
+    response = Response(json.dumps(invalidBookObjectErrorMsg), status=404, mimetype='application/json')
     return response
 
  
