@@ -9,6 +9,11 @@ books = [
         'isbn': 36545334235,
     },
     {
+        'name': 'Green apple are green',
+        'price': 7.99,
+        'isbn': 36545334238,
+    },
+    {
         'name': 'The cat in the hat',
         'price': 6.99,
         'isbn': 35436488787,
@@ -30,9 +35,14 @@ books = [
         'isbn': 54925454345,
     },
     {
-        "name": "Le Talmud, traité de Halaka et Guemarra",
+        "name": "Le Talmud, traité de Halaka et Guemarra VOL I",
         "price": 489.63,
         "isbn": 36545312345
+    },
+        {
+        "name": "Le Talmud, traité de Halaka et Guemarra VOL II",
+        "price": 489.63,
+        "isbn": 36545312359
     }
 ]
 
@@ -75,6 +85,8 @@ def add_book():
         return response
 
 
+
+#GET
 @booksapp.route('/books/<int:isbn>')
 def get_books_by_isbn(isbn):
     return_value ={}
@@ -86,7 +98,21 @@ def get_books_by_isbn(isbn):
             }
     return jsonify(return_value)
 
-#PUT /books/36545312345
+# TO FINISH
+# @booksapp.route('/books/<string:name>', methods=['GET'])
+# def get_books_by_name(name):
+#     i = 0
+#     found_books = []
+#     for book in books:
+#         if book["name"].find(name):
+#             i += 1
+#         else:
+#             found_books.append(books[i])    
+#     return jsonify(found_books)
+
+
+
+
 
 def valid_put_request_data(request_data):
     if("name" in request_data and
@@ -95,6 +121,8 @@ def valid_put_request_data(request_data):
     else:
         return False
 
+
+#REPLACE
 @booksapp.route('/books/<int:isbn>', methods=['PUT'])
 def replace_book(isbn):
     request_data = request.get_json()
@@ -120,6 +148,8 @@ def replace_book(isbn):
     response = Response("",status=204)
     return response
 
+
+#PATCH
 @booksapp.route('/books/<int:isbn>', methods=['PATCH'])
 def update_book(isbn):
     request_data = request.get_json()
@@ -135,6 +165,7 @@ def update_book(isbn):
     response.headers['Location'] = "/books/" + str(isbn)
     return response  
 
+# DELETE
 @booksapp.route('/books/<int:isbn>', methods=['DELETE'])
 def delete_book(isbn):
     i = 0
@@ -147,5 +178,5 @@ def delete_book(isbn):
     response.headers['Location'] = "/books/" + str(isbn)
     return response
 
-  
+ 
 booksapp.run(port=5000)
