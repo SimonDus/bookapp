@@ -99,16 +99,16 @@ def get_books_by_isbn(isbn):
     return jsonify(return_value)
 
 # TO FINISH
-# @booksapp.route('/books/<string:name>', methods=['GET'])
-# def get_books_by_name(name):
-#     i = 0
-#     found_books = []
-#     for book in books:
-#         if book["name"].find(name):
-#             i += 1
-#         else:
-#             found_books.append(books[i])    
-#     return jsonify(found_books)
+@booksapp.route('/books/<string:name>', methods=['GET'])
+def get_books_by_name(name):
+    i = 0
+    found_books = []
+    for book in books:
+        if book["name"].find(name):
+            i += 1
+        else:
+            found_books.append(books[i])    
+    return jsonify(found_books)
 
 
 
