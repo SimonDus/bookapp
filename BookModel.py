@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy 
+from flask_sqlalchemy import SQLAlchemy
 import json
 from settings import booksapp
 
@@ -21,6 +21,7 @@ class Book(db.Model):
         db.session.add(new_book)
         db.session.commit()
 
+    @staticmethod
     def get_all_books():
         return [Book.json(book) for book in Book.query.all()]
 

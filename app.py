@@ -1,12 +1,28 @@
 from flask import Flask, jsonify, request, Response
 import json
+import datetime
 from settings import *
 from BookModel import *
+from flask_jwt import jwt
+
+
+
+booksapp.config['SECRET_KEY'] = 'NotSoSecretKey'
+
+@booksapp.route('/login')
+def get_token():
+    expiration_date = datetime.datetime.utcnow() + datetime.timedelta(seconds=100)
+    token = jwt.encode({'exp': expiration_date}, booksapp.config['SECRET_KEY'], algorithm='HS256')
+    return token
 
 #Get /books
 @booksapp.route('/books')
-
 def get_books():
+    token = request.args.get('token')
+    try:
+        jwt.decode(token, booksapp.config['SECRET_KEY'])
+    except:
+        return jsonify({'error': 'Need a valid token to view this page'}, 401)
     return jsonify({'books': Book.get_all_books()})
 
 
