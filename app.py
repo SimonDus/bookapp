@@ -4,25 +4,44 @@ import datetime
 from settings import *
 from BookModel import *
 from flask_jwt import jwt
+from UserModel import User
+from functools import wraps
 
 
 
 booksapp.config['SECRET_KEY'] = 'NotSoSecretKey'
 
-@booksapp.route('/login')
+# LOGIN
+@booksapp.route('/login', methods=['POST'])
 def get_token():
-    expiration_date = datetime.datetime.utcnow() + datetime.timedelta(seconds=100)
-    token = jwt.encode({'exp': expiration_date}, booksapp.config['SECRET_KEY'], algorithm='HS256')
-    return token
+    request_data = request.get_json()
+    username = str(request_data['username'])
+    password = str(request_data['password'])
 
-#Get /books
+    match = User.username_password_match(username, password)
+
+    if match:
+        expiration_date = datetime.datetime.utcnow() + datetime.timedelta(seconds=100)
+        token = jwt.encode({'exp': expiration_date}, booksapp.config['SECRET_KEY'], algorithm='HS256')
+        return token
+    else:
+        return Response('', 401, mimetype='application/json')
+
+def token_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        token = request.args.get('token')
+        try:
+            jwt.decode(token, booksapp.config['SECRET_KEY'])
+            return f(*args, **kwargs)
+        except:
+            return jsonify({'error': 'Need a valid token to view this page'}, 401)
+    return wrapper
+
+
+# Get /books
 @booksapp.route('/books')
 def get_books():
-    token = request.args.get('token')
-    try:
-        jwt.decode(token, booksapp.config['SECRET_KEY'])
-    except:
-        return jsonify({'error': 'Need a valid token to view this page'}, 401)
     return jsonify({'books': Book.get_all_books()})
 
 
@@ -36,6 +55,7 @@ def validBooksObject(bookObject):
 
 #POST
 @booksapp.route('/books', methods=['POST'])
+@token_required
 def add_book():
     request_data = request.get_json()
     if(validBooksObject(request_data)):
@@ -97,6 +117,7 @@ def replace_book(isbn):
 
 #PATCH
 @booksapp.route('/books/<int:isbn>', methods=['PATCH'])
+@token_required
 def update_book(isbn):
     request_data = request.get_json()
 
@@ -110,6 +131,7 @@ def update_book(isbn):
 
 # DELETE
 @booksapp.route('/books/<int:isbn>', methods=['DELETE'])
+@token_required
 def delete_book(isbn):
     if (Book.delete_book(isbn)):
         response = Response("", status=204)
