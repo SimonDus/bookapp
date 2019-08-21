@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request, Response
 import json
+from settings import *
 
-booksapp = Flask(__name__)
+
 books = [
     {
         'name': 'Green eggs and Ham',
